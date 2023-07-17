@@ -1,0 +1,70 @@
+========={ Arquitectura de capas de la mayor parte de archivos de mi proyecto }=========
+
+capa de repositorios 
+🠋
+
+capas de persistencia en mongo y memoria presentes en DAO
+🠋
+
+capa de controladores
+🠋
+
+capa de routers
+🠋
+
+capa de renderizado
+🠋
+
+
+
+========={ Algunos patrones de diseño usados }=========
+
+➤ DAO
+
+➤ Factory
+
+➤ DTO  
+
+➤ Repository
+
+
+
+========={ Carpetas principales dentro de src }=========
+
+➤ config: Se encarga de la configuración de dependencias, variables de entorno y otras cosas.
+
+➤ controllers: Se tiene la lógica principal de los métodos usando como apoyo también métodos 
+sacados de la capa de servicios o en la mayoría de los métodos de esta capa usados en el proyecto
+en sus respectivos archivos de lógica para la persistencia elegida.
+
+➤ dao: Muestra los DTO, los archivos de lógica de persistencia, el archivo de la lógica de factory y más.
+
+➤ rendered: Tiene las vistas y la lógica de las vistas del lado del cliente.
+
+➤ repositories: Se encarga de los métodos principales los cuales suelen usarse en la capa de servicios o en 
+la mayoría de los métodos de esta capa usados en el proyecto en sus respectivos archivos de lógica para la 
+persistencia elegida.
+
+➤ routers: Se dividen en dos grandes grupos, los de la carpeta "api" que son los que tienen lógica del lado del
+backend y los de la carpeta "web" que tienen lógica del lado del frontend y suelen renderizan vistas
+
+➤ service: Esta carpeta se encarga de la capa de servicios, en este caso solo contiene un archivo llamado "ticket.service.js"
+el cual tiene la capa de servicios del modelo de tickets (orden de compra)
+
+
+
+========={ Archivos principales del proyecto }=========
+
+➤ app.js: El archivo principal y más importante del proyecto
+
+➤ utils.js: Donde se obtiene el dirname, que es fundamental para obtener la ruta completa de algún archivo
+
+➤ .env: Donde se definen los argumentos de las variables de entorno
+
+➤ .gitignore: Donde se definen las cosas que se ignorarán al subirse el proyecto a github
+
+➤ Los archivos package.json y package-lock.json: Donde se ven las dependencias que se tienen instalas en el proyecto y más
+
+➤ README.md: La descripción principal de mi proyecto
+
+➤ products.json: Ese archivo solo cumple la función para que las demás personas que usen este proyecto tengan los objetos que tengo en mi base de datos
