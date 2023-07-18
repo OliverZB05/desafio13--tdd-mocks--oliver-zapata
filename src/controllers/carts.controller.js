@@ -28,7 +28,6 @@ const getAll_Carts = async (req, res, next) => {
         try {
             // Obtenga solo los carritos asociados con el usuario actual
             const cartIds = req.user.carts.map(c => c.cart);
-            /* const carts = await getAll(cartIds); */
             const carts = await cartInstance.getAll(cartIds);
 
             if (carts.some(cart => !Array.isArray(cart.products))) {

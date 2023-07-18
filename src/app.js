@@ -20,7 +20,7 @@ mongoose.connect(config.mongoUrl, {
 });
 
 //========={ Dirname }=========
-import __dirname from './utils.js';
+import {__dirname} from './utils.js';
 //========={ Dirname }=========
 
 //========={ Routers }=========

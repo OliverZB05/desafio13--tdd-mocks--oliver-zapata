@@ -1,4 +1,4 @@
-# desafio12--3partepf--oliver-zapata
+# desafio13--tdd-mocks--oliver-zapata
 
 ## Pasos para ejecutarlo
 
@@ -149,9 +149,12 @@ En este router se renderizan las vistas de registro y de login mostradas en las 
 - Ahora se maneja jwt en conjunto con passport<br>
 - Se añadió una nueva ruta http://localhost:8080/api/sessions/current donde se ve el usuario
 - Ahora los métodos get del carrito de compras está asociado a los usuarios por lo que solo se verán los carritos que haya creado el usuario registrado
-
-### Nuevas implementaciones
-
 - Se agregaron variables de entorno
 - Se aplicaron patrones de diseño y una nueva arquitectura de capas (eso explicado en el documento de texto "Arquitectura de mi proyecto")
 - Se agrego un modelo de tickets y lógica para esa orden de compra
+
+### Nuevas implementaciones
+
+- Se añadió el patrón de diseño TDD 
+- Se añadió faker con y dos nuevos métodos, un método "mockingproducts" para crear 50 productos usando faker, y otro método "deleteMockingProducts" para eliminar los 50 productos creados por faker
+

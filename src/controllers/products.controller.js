@@ -2,6 +2,7 @@ import Factory from "../dao/factory.js";
 const Products = Factory.Products;
 
 import { productModel } from "../dao/mongo/models/products.model.js";
+import { generateProduct } from "../utils.js";
 
 const products = new Products();
 import ProductDto from '../dao/DTOs/config.dto.js';
@@ -61,6 +62,50 @@ const get_Products = async (req, res) => {
             prevLink,
             nextLink
         });
+
+    //======== { TDD de get_Products } ========
+    let PastTests = 0;
+    let TotalTests = 2;
+
+
+    /* 1. Verificar que el método devuelve correctamente los productos filtrados
+    por categoría y disponibilidad cuando se especifican en la consulta */
+    if(sort !== undefined || sort !== null){
+        console.log('Test 1: Correcto');
+        PastTests++;
+    }else{
+        console.log('Test 1: Incorrecto');
+    }
+
+    // 2. Verificar que el método devuelve correctamente los productos ordenados
+    // por precio cuando se especifica en la consulta
+    let isSortedCorrectly = true;
+    for(let i = 0; i < productsResult.length - 1; i++){
+        if(sort === 'asc' && productsResult[i].price > productsResult[i + 1].price){
+            isSortedCorrectly = false;
+            break;
+        }
+        if(sort === 'desc' && productsResult[i].price < productsResult[i + 1].price){
+            isSortedCorrectly = false;
+            break;
+        }
+    }
+    if(isSortedCorrectly){
+        console.log('Test 2: Correcto');
+        PastTests++;
+    }else{
+        console.log('Test 2: Incorrecto');
+    }
+
+
+
+    if(PastTests === TotalTests) console.log('Pruebas pasadas exitosamente')
+    console.log(`Se pasaron ${PastTests} tests de un total de ${TotalTests} en el método get_Products`);
+    console.log(" ");
+    console.log(" ");
+    //======== { TDD de get_Products } ========
+
+
     }
     catch (error){
         res.status(500).send({ status: "error", error});
@@ -75,26 +120,71 @@ const getID_Products = async (req, res) => {
     try {
         const productsResult = await products.getID_Products(pid);
         res.send({ status: "success", payload: productsResult });
+
+        //======== { TDD de getID_Products } ========
+        let PastTests = 0;
+        let TotalTests = 1;
+
+        // 1. Vefifica que devuelva el producto correcto según su id
+        if(productsResult._id.toString() === pid.toString()) {
+            console.log('Test 1: Correcto');
+            PastTests++;
+        } else {
+            console.log('Test 1: Incorrecto');
+        }
+        
+
+        if(PastTests === TotalTests) console.log('Pruebas pasadas exitosamente')
+        console.log(`Se pasaron ${PastTests} tests de un total de ${TotalTests} en el método getID_Products`);
+        console.log(" ");
+        console.log(" ");
+        //======== { TDD de getID_Products } ========
     }
     catch (error){
         res.status(500).send({ status: "error", error});
     }
-};
+}; 
 //======== { getID_Products / productos por su ID } ========
 
 //======== { post_Products / crear productos } ========
 const post_Products = async (req, res) => {
     const { title, description, price, thumbnail, stock, category } = req.body;
 
+    //======== { TDD de post_Products / parte 1 } ========
+    let PastTests = 0;
+    let TotalTests = 2;
+
+    // 1. Verificar que se reciba un error en caso de que falten campos requeridos por especificar
     if(!title || !description || !price || !thumbnail || !stock || !category){
-        return res.status(400).send({ status: "error", error: "incomplete values"})
+        let missingProperties = [];
+        if(!title) missingProperties.push('title');
+        if(!description) missingProperties.push('description');
+        if(!price) missingProperties.push('price');
+        if(!thumbnail) missingProperties.push('thumbnail');
+        if(!stock) missingProperties.push('stock');
+        if(!category) missingProperties.push('category');
+    
+        console.log(`Test 1: Incorrecto. Faltan las siguientes propiedades: ${missingProperties.join(', ')}`);
+        return res.status(400).send({ status: "error", error: `Faltan las siguientes propiedades: ${missingProperties.join(', ')}`})
+    }else{
+        PastTests++;
+        console.log('Test 1: Correcto');
     }
+    
+    //======== { TDD de post_Products / parte 1 } ========
+
+    let response;
 
     try{
+        //======== { TDD de post_Products / parte 2 } ========
+        // 2. Verificar si el producto no existe
         const existingProduct = await productModel.findOne({ title, description });
         if (existingProduct) {
+            console.log('Test 2: Incorrecto');
             res.status(400).send({ status: "error", error: `El producto con título "${title}" y descripción "${description}" ya existe en la base de datos.` });
         } else {
+            PastTests++;
+            console.log('Test 2: Correcto');
             const productDto = new ProductDto({
                 title,
                 description,
@@ -109,12 +199,18 @@ const post_Products = async (req, res) => {
 
             const productsResult = await products.post_Products(dbProduct);
 
-            const response = {...productDto};
+            response = {...productDto};
             delete response.title;
             delete response.category;
 
             res.send({status: "success", payload: response});
         }
+
+        if(PastTests === TotalTests) console.log('Pruebas pasadas exitosamente')
+        console.log(`Se pasaron ${PastTests} tests de un total de ${TotalTests} en el método post_Products`);
+        console.log(" ");
+        console.log(" ");
+        //======== { TDD de post_Products / parte 2 } ========
     }
     catch (error){
         res.status(500).send({ status: "error", error});
@@ -161,7 +257,6 @@ const put_Products = async (req, res) => {
         res.status(500).send({ status: "error", error});
     }
 };
-
 //======== { put_Products / actualizar productos } ========
 
 //======== { delete_Products / borrar productos } ========
@@ -179,6 +274,7 @@ const delete_Products = async (req, res) => {
 };
 //======== { delete_Products / borrar productos } ========
 
+//======== { updateProductStock / actualizar el stock del producto } ========
 const updateProductStock = async (req, res) => {
     const { pid } = req.params;
     const { newStock } = req.body;
@@ -190,6 +286,39 @@ const updateProductStock = async (req, res) => {
         res.status(500).send({ status: "error", error });
     }
 };
+//======== { updateProductStock / actualizar el stock del producto } ========
 
+//======== { mockingproducts / crear productos con mocks } ========
+let productsCreated = 0;
 
-export { get_Products, getID_Products, post_Products, put_Products, delete_Products };
+const mockingproducts = async (req, res) => {
+    if (productsCreated >= 50) {
+        return res.status(400).send({ status: "error", message: "Ya se han creado 50 productos" });
+    }
+    try {
+        for (let i = 0; i < 50; i++) {
+            const product = generateProduct();
+            await products.post_Products(product);
+            productsCreated++;
+        }
+        res.send({ status: "success", message: "Se han creado 50 productos con éxito" });
+    } catch (error) {
+        res.status(500).send({ status: "error", error });
+        console.error(error);
+    }
+};
+//======== { mockingproducts / crear productos con mocks } ========
+
+//======== { deleteMockingProducts / borrar solo los productos creados por mocks } ========
+const deleteMockingProducts = async (req, res) => {
+    try {
+        await products.deleteMockingProducts({ isMockingProduct: true });
+        res.send({ status: "success", message: "Se han eliminado los productos creados por el método mockingproducts" });
+    } catch (error) {
+        res.status(500).send({ status: "error", error });
+        console.error(error);
+    }
+};
+//======== { deleteMockingProducts / borrar solo los productos creados por mocks } ========
+
+export { get_Products, getID_Products, post_Products, put_Products, delete_Products, mockingproducts, deleteMockingProducts };

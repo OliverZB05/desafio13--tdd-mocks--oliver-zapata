@@ -26,8 +26,8 @@ export default class ProductRepository {
         return result;
     }
 
-    async findById(id) {
-        const product = await productModel.findById(id);
-        return product;
-    }
+    async deleteMany(filter) {
+        const result = await productModel.deleteMany(filter);
+        return result;
+    }    
 }

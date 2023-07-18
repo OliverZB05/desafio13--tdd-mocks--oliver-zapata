@@ -11,8 +11,8 @@ export default class Products {
     }
 
     getID_Products = async (pid) => {
-        const products = await this.productRepository.find({ _id: pid });
-        return products.map(prod => prod.toObject());
+        const product = await this.productRepository.findOne({ _id: pid });
+        return product.toObject();
     }
 
     post_Products = async (prod) => {
@@ -33,6 +33,11 @@ export default class Products {
     updateProductStock = async (productId, newStock) => {
         // Actualizar el stock del producto en la base de datos
         await this.productRepository.updateOne({ _id: productId }, { stock: newStock });
+    }
+
+    deleteMockingProducts = async () => {
+        const result = await this.productRepository.deleteMany({ isMockingProduct: true });
+        return result;
     }
     
 }

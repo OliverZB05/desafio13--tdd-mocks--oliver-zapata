@@ -35,6 +35,10 @@ const productSchema = new mongoose.Schema({
     code: {
         type: Boolean,
         default: true
+    },
+    isMockingProduct: {
+        type: Boolean,
+        default: true
     }
 });
 //========={ Esquema de products }=========

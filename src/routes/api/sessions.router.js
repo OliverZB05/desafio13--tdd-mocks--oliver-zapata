@@ -20,13 +20,15 @@ res.send({ status: 'success', message: 'User registered', token: data.token });
 
 //========= Login =========
 router.post('/login', (req, res, next) => {
-passport.authenticate('login', (err, data, info) => {
-if (err) return next(err);
-if (!data) return res.send({ status: 'error', message: info.message });
-res.cookie('jwt', data.token, { httpOnly: true });
+    passport.authenticate('login', (err, data, info) => {
+        if (err) return next(err);
+        if (!data) return res.send({ status: 'error', message: info.message });
 
-res.send({ status: 'success', message: 'Login success', token: data.token });
-})(req, res, next);
+        req.session.user = data.user; 
+
+        res.cookie('jwt', data.token, { httpOnly: true });
+        res.send({ status: 'success', message: 'Login success', token: data.token });
+    })(req, res, next);
 });
 
 //========= Login =========

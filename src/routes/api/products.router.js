@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { get_Products, getID_Products, post_Products, put_Products, delete_Products } from '../../controllers/products.controller.js';
+import { get_Products, getID_Products, post_Products, put_Products, delete_Products, mockingproducts, deleteMockingProducts } from '../../controllers/products.controller.js';
 
 const router = Router();
 
@@ -11,6 +11,9 @@ router.get('/:pid', getID_Products);
 //======== { Otros métodos } ========
 router.post('/', post_Products);
 router.put('/:pid', put_Products);
+
+router.post('/mockingproducts', mockingproducts)
+router.delete('/deleteMockingProducts', deleteMockingProducts);
 router.delete('/:pid', delete_Products);
 //======== { Otros métodos } ========
 

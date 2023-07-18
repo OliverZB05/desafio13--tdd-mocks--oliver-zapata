@@ -34,6 +34,9 @@ router.get('/products', passport.authenticate('jwt', { session: false }), async 
     } else {
     data.user = null;
     }
+
+    req.session.viewedProducts = true; // Para verificar si el usuario hiso login
+
     res.render("products", data);
 });
 
